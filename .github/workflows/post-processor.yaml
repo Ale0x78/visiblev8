@@ -35,11 +35,11 @@ jobs:
       - name: Build and push post-processor image
         uses: docker/build-push-action@v6
         with:
-          context: ./post-processor
           file: ./.github/build-postprocessors/Dockerfile
           platforms: linux/amd64,linux/arm64
-          push: false
-          tags: postprocessors:latest
+          push: true
+          tags: visiblev8/vv8-postprocessors:latest
+
       - name: Remove artifacts
         if: always()
         uses: docker://ubuntu:latest
