@@ -83,8 +83,8 @@ func (agg *flowAggregator) IngestRecord(ctx *core.ExecutionContext, lineNumber i
 		}
 
 		currentAction := fmt.Sprint(offset) + string(',') + fullName + string(',') + string(op)
-
-		if agg.lastAction[:len(agg.lastAction) - 2] == currentAction[:len(currentAction) - 2] && op == 'c' {
+		// len(agg.lastAction) != 0 is a hack to check if this the first action
+		if len(agg.lastAction) != 0 && agg.lastAction[:len(agg.lastAction) - 2] == currentAction[:len(currentAction) - 2] && op == 'c' {
 			script.APIs = script.APIs[:len(script.APIs) - 1]
 		}
 
