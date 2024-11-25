@@ -96,9 +96,9 @@ func (agg *flowAggregator) IngestRecord(ctx *core.ExecutionContext, lineNumber i
 
 var scriptFlowFields = [...]string{
 	"isolate",
+	"visiblev8",
 	"submissionid",
 	"scriptsha2",
-	"visiblev8",
 	"code",
 	"url",
 	"evaled_by",
