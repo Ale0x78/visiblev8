@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - 'master'
+  workflow_dispatch:
 jobs:
   upload_to_docker:
     name: Push docker image to docker Hub
@@ -35,11 +36,10 @@ jobs:
       - name: Build and push post-processor image
         uses: docker/build-push-action@v6
         with:
-          context: ./post-processor
           file: ./.github/build-postprocessors/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: postprocessors:latest
+          tags: visiblev8/vv8-postprocessors:latest
       - name: Remove artifacts
         if: always()
         uses: docker://ubuntu:latest
