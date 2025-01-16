@@ -82,10 +82,11 @@ func (agg *flowAggregator) IngestRecord(ctx *core.ExecutionContext, lineNumber i
 			agg.scriptList[ctx.Script.ID] = script
 		}
 
-		currentAction := fmt.Sprint(offset) + string(',') + fullName
 
-		if agg.lastAction == currentAction && op == 'c' {
-			return nil
+		currentAction := fmt.Sprint(offset) + string(',') + fullName + string(',') + string(op)
+		// len(agg.lastAction) != 0 is a hack to check if this the first action
+		if len(agg.lastAction) != 0 && agg.lastAction[:len(agg.lastAction) - 2] == currentAction[:len(currentAction) - 2] && op == 'c' {
+			script.APIs = script.APIs[:len(script.APIs) - 1]
 		}
 
 		script.APIs = append(script.APIs, currentAction)
@@ -97,6 +98,8 @@ func (agg *flowAggregator) IngestRecord(ctx *core.ExecutionContext, lineNumber i
 var scriptFlowFields = [...]string{
 	"isolate",
 	"visiblev8",
+	"submissionid",
+	"scriptsha2",
 	"code",
 	"url",
 	"evaled_by",
