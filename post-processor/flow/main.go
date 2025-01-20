@@ -85,7 +85,7 @@ func (agg *flowAggregator) IngestRecord(ctx *core.ExecutionContext, lineNumber i
 
 		currentAction := fmt.Sprint(offset) + string(',') + fullName + string(',') + string(op)
 		// len(agg.lastAction) != 0 is a hack to check if this the first action
-		if len(agg.lastAction) != 0 && agg.lastAction[:len(agg.lastAction) - 2] == currentAction[:len(currentAction) - 2] && op == 'c' {
+		if len(agg.lastAction) != 0 && agg.lastAction[:len(agg.lastAction) - 2] == currentAction[:len(currentAction) - 2] && op == 'c' && agg.lastAction[len(agg.lastAction) - 1] == 'g' {
 			script.APIs = script.APIs[:len(script.APIs) - 1]
 		}
 
@@ -114,7 +114,7 @@ func (agg *flowAggregator) DumpToPostgresql(ctx *core.AggregationContext, sqlDb 
 		return err
 	}
 
-	stmt, err := txn.Prepare(pq.CopyIn("script_flow", scriptFlowFields[:]...))
+	stmt, err := txn.Prepare(pq.CopyIn("linked_flow", scriptFlowFields[:]...))
 	if err != nil {
 		txn.Rollback()
 		return err
@@ -133,6 +133,8 @@ func (agg *flowAggregator) DumpToPostgresql(ctx *core.AggregationContext, sqlDb 
 		_, err = stmt.Exec(
 			script.info.Isolate.ID,
 			script.info.VisibleV8,
+			ctx.Ln.SubmissionID,
+			script.info.CodeHash.SHA2,
 			script.info.Code,
 			script.info.URL,
 			evaledById,
@@ -171,6 +173,15 @@ func (agg *flowAggregator) DumpToStream(ctx *core.AggregationContext, stream io.
 		}
 
 		jstream.Encode(core.JSONArray{"script_flow", core.JSONObject{
+			// "isolate",
+			// "visiblev8",
+			// "submissionid",
+			// "scriptsha2",
+			// "code",
+			// "url",
+			// "evaled_by",
+			// "apis",
+			// "first_origin",
 			"ID":          script.info.ID,
 			"Isolate":     script.info.Isolate.ID,
 			"IsVisibleV8": script.info.VisibleV8,
