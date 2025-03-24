@@ -253,11 +253,12 @@ func NewScriptHash(code string) ScriptHash {
 // NewScriptInfo constructs a new script in a given Isolate with the given runtime ID and code body
 func NewScriptInfo(iso *IsolateInfo, id int, code string, activeOrigin *Origin) *ScriptInfo {
 	return &ScriptInfo{
-		Isolate:     iso,
-		ID:          id,
-		Code:        code,
-		CodeHash:    NewScriptHash(code),
-		FirstOrigin: activeOrigin,
+		Isolate:          iso,
+		ID:               id,
+		Code:             code,
+		UniqueIdentifier: uuid.New(),
+		CodeHash:         NewScriptHash(code),
+		FirstOrigin:      activeOrigin,
 	}
 }
 

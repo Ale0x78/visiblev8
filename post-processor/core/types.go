@@ -100,6 +100,8 @@ type ScriptInfo struct {
 	// Self ID (per parent isolate)
 	ID int
 
+	UniqueIdentifier uuid.UUID
+
 	// Is this a "visible-v8://" script (which shouldn't be included in usage stats)?
 	VisibleV8 bool
 

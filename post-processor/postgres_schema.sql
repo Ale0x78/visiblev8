@@ -173,6 +173,25 @@ CREATE TABLE IF NOT EXISTS script_flow (
 	evaled_by INT -- REFERENCES script_flow (id)
 );
 
+
+CREATE TABLE IF NOT EXISTS tracer.scripts (
+	sha256 BYTEA PRIMARY KEY NOT NULL,
+	code TEXT NOT NULL,
+);
+
+CREATE TABLE IF NOT EXISTS tracer.traces (
+	id SERIAL PRIMARY KEY NOT NULL,
+	isolate TEXT NOT NULL, -- V8 isolate pointer
+	visiblev8 BOOLEAN NOT NULL, -- Is the script loaded by the browser/injected by VisibleV8 (in most cases you want to ignore scripts if this is true)
+	sha256 BYTEA REFERENCES(tracer.scripts.sha256),
+	first_origin TEXT,
+	url TEXT,
+	apis JSONB[],
+	unique_id TEXT,
+	evaled_by TEXT -- REFERENCES script_flow (id)
+);
+
+
 -- Feature usage information (for monomorphic callsites)
 CREATE TABLE IF NOT EXISTS feature_usage (
 	id SERIAL PRIMARY KEY NOT NULL,

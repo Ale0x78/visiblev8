@@ -26,6 +26,7 @@ import (
 	"github.com/wspr-ncsu/visiblev8/post-processor/idl_apis"
 	"github.com/wspr-ncsu/visiblev8/post-processor/mega"
 	"github.com/wspr-ncsu/visiblev8/post-processor/micro"
+	"github.com/wspr-ncsu/visiblev8/post-processor/tracer"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/gridfs"
 )
@@ -64,6 +65,7 @@ var acceptedOutputFormats = map[string]formatAggregator{
 	"create_element":    {"CreateElement", elements.NewCreateElementAggregator},
 	"ufeatures":         {"MicroFeatureUsage", micro.NewFeatureUsageAggregator},
 	"flow":              {"flow", flow.NewAggregator},
+	"tracer":            {"tracer", tracer.NewAggregator},
 	"noop":              {"Noop", nullCtor},
 }
 
