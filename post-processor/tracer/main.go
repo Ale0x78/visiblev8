@@ -177,7 +177,7 @@ func (agg *flowAggregator) DumpToPostgresql(ctx *core.AggregationContext, sqlDb 
 		return err
 	}
 
-	stmt_traces, err := txn.Prepare(pq.CopyIn("tracer.scripts", tracerTracesFields[:]...))
+	stmt_traces, err := txn.Prepare(pq.CopyIn("tracer.traces", tracerTracesFields[:]...))
 	if err != nil {
 		txn.Rollback()
 		return err
